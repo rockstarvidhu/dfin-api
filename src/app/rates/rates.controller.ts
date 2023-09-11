@@ -9,10 +9,11 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { MetalRateService } from "./rates.servie";
-import { updatePercentDto } from "./dto/rates.dto";
-import { Auth, User } from "src/shared/decorators";
+import { UpdatePercentDto } from "./dto/rates.dto";
+import { Auth, User } from "../../shared/decorators";
 import { ReqUser } from "../user/entities/user.entity";
 import { Observable, catchError, interval, map, switchMap } from "rxjs";
+import { getLiveRatesHeader } from "./types/header.type";
 
 @ApiTags("Metal Rates")
 @Controller("rates")
@@ -20,7 +21,7 @@ export class RatesController {
   constructor(private readonly metalRateService: MetalRateService) {}
 
   @Get("")
-  getAllListings(@Headers() headers: Object) {
+  getAllListings(@Headers() headers: getLiveRatesHeader) {
     // Access headers here
     const userId = headers["user-id"];
     // console.log(userId, "user id");
@@ -35,8 +36,8 @@ export class RatesController {
   // }
 
   @Auth("USER_ADMIN")
-  @Post("rateAdjustments")
-  updatePercent(@User() user: ReqUser, @Body() ratePercents: updatePercentDto) {
+  @Post("rate-adjustments")
+  updatePercent(@User() user: ReqUser, @Body() ratePercents: UpdatePercentDto) {
     this.metalRateService.adjustRate(user, ratePercents);
   }
 

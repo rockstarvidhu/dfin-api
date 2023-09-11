@@ -1,21 +1,21 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as SchemaType } from "mongoose";
-import { User } from "src/app/user/entities/user.entity";
+import { User } from "../../user/entities/user.entity";
 
-export type AppGenDocument = HydratedDocument<AppGenLog>;
+export type AppGenDocument = HydratedDocument<AppBuildLog>;
 
 @Schema({
   timestamps: true,
 })
-export class AppGenLog {
+export class AppBuildLog {
   @Prop({ type: SchemaType.Types.ObjectId, ref: "User", required: true })
-  user: User;
+  user!: User;
 
   @Prop({ required: true })
-  background_color: string;
+  backgroundColor!: string;
 
   @Prop({ required: true })
-  background_image: string;
+  backgroundImage!: string;
 }
 
-export const AppGenSchema = SchemaFactory.createForClass(AppGenLog);
+export const AppGenSchema = SchemaFactory.createForClass(AppBuildLog);

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { AppGenLog, AppGenSchema } from "./entities/appgen.entity";
+import { AppBuildLog, AppGenSchema } from "./entities/appgen.entity";
 import { AppGenController } from "./appgen.controller";
 import { AppGenService } from "./appgen.service";
 import { UserModule } from "../user/user.module";
@@ -9,7 +9,7 @@ import { UserModule } from "../user/user.module";
   imports: [
     MongooseModule.forFeature([
       {
-        name: AppGenLog.name,
+        name: AppBuildLog.name,
         schema: AppGenSchema,
       },
     ]),

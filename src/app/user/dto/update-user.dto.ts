@@ -1,15 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, MinLength, IsEmail, IsEnum } from "class-validator";
-import { Role, RoleType } from "src/shared/types";
+import { Role, RoleType } from "../../../shared/types";
 
-export class updateUserDto {
+export class UpdateUserDto {
   @ApiProperty({
     example: "John Doe",
     description: "User Name",
     required: false,
   })
   @IsString()
-  name: string;
+  name!: string;
 
   @ApiProperty({
     example: "JohnDoe@gmail.com",
@@ -17,7 +17,7 @@ export class updateUserDto {
     required: false,
   })
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     example: Role.USER_ADMIN,
@@ -26,5 +26,5 @@ export class updateUserDto {
     required: false,
   })
   @IsEnum(Role)
-  role: RoleType;
+  role!: RoleType;
 }

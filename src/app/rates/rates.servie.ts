@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { HttpService } from "@nestjs/axios";
 import { AxiosResponse } from "axios";
-import { Observable, catchError, map } from "rxjs";
-import { updatePercentDto } from "./dto/rates.dto";
+import { Observable, catchError, firstValueFrom, map } from "rxjs";
+import { UpdatePercentDto } from "./dto/rates.dto";
 import {
   RateAdjustments,
   RateAdjustmentsDocument,
@@ -11,7 +11,7 @@ import {
 import { Model } from "mongoose";
 import { ReqUser } from "../user/entities/user.entity";
 import { InjectModel } from "@nestjs/mongoose";
-import { GOLD_API } from "src/config";
+import { GOLD_API } from "../../config";
 
 @Injectable()
 export class MetalRateService {
@@ -74,7 +74,7 @@ export class MetalRateService {
 
   async adjustRate(
     user: ReqUser,
-    ratePercents: updatePercentDto
+    ratePercents: UpdatePercentDto
   ): Promise<RateAdjustments> {
     const updatedBy = await this.userService.findOneByEmail(user.email);
 
@@ -98,16 +98,11 @@ export class MetalRateService {
   }
 
   async fetchMetalRate(apiUrl: string, headers: Record<string, string>) {
-    try {
-      const response: AxiosResponse<Object[]> = await this.httpService
-        .get(apiUrl, { headers })
-        .toPromise();
+    const response: AxiosResponse<Object[]> = await firstValueFrom(
+      this.httpService.get(apiUrl, { headers })
+    );
 
-      return response.data;
-    } catch (error) {
-      // Handle errors here
-      throw error;
-    }
+    return response.data;
   }
   async calculateUpdatedMetalRate(rateDataAED: any, ratePercents: any) {
     const percentageChange = ratePercents.percentageChange / 100;
@@ -142,7 +137,7 @@ export class MetalRateService {
     }
 
     const headers = {
-      "x-access-token": `goldapi-5j88rlmaby265-io`,
+      "x-access-token": GOLD_API.GOLD_API_TOKEN,
     };
 
     const metals = [

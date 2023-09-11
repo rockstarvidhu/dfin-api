@@ -3,8 +3,8 @@ import { Model } from "mongoose";
 import { NewUser, User, UserDocument } from "./entities/user.entity";
 import * as bcrypt from "bcrypt";
 import { InjectModel } from "@nestjs/mongoose";
-import { Status } from "src/shared/types";
-import { deleteUserDto } from "./dto/delete-user.dto";
+import { Status } from "../../shared/types";
+import { DeleteUserDto } from "./dto/delete-user.dto";
 const SALT_ROUNDS = 10;
 
 @Injectable()
@@ -107,7 +107,6 @@ export class UserService {
   async deleteUser(id: string): Promise<User | null> {
     const user = await this.findOneById(id);
 
-    console.log(user, "user data ");
     if (user) {
       const deletedUser = await this.user.findByIdAndDelete(user);
       return deletedUser;

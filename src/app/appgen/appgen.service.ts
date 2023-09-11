@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { AppGenLog, AppGenDocument } from "./entities/appgen.entity";
+import { AppBuildLog, AppGenDocument } from "./entities/appgen.entity";
 import { ReqUser } from "../user/entities/user.entity";
 import { BuildAppDto } from "./dto/appgen.dto.";
 import { UserService } from "../user/user.service";
@@ -9,7 +9,7 @@ import { UserService } from "../user/user.service";
 @Injectable()
 export class AppGenService {
   constructor(
-    @InjectModel(AppGenLog.name)
+    @InjectModel(AppBuildLog.name)
     private post: Model<AppGenDocument>,
     private userService: UserService
   ) {}
@@ -20,7 +20,7 @@ export class AppGenService {
    * @returns  Promise<Post>
    */
 
-  async build(user: ReqUser, appGenData: BuildAppDto): Promise<AppGenLog> {
+  async build(user: ReqUser, appGenData: BuildAppDto): Promise<AppBuildLog> {
     const postedBy = await this.userService.findOneByEmail(user.email);
     const createdLog = new this.post({
       ...appGenData,

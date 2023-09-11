@@ -3,16 +3,16 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { SessionData, SessionDataDocument } from './entities/session.entity';
-import { UserService } from '../user/user.service';
-import { User, WarpedUser } from '../user/entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
-import type { SessionTokenPayload, AuthToken } from '../../shared/types';
-import { LoginDto } from './dto/login.dto';
-import { Status } from 'src/shared/types';
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { SessionData, SessionDataDocument } from "./entities/session.entity";
+import { UserService } from "../user/user.service";
+import { User, WarpedUser } from "../user/entities/user.entity";
+import { JwtService } from "@nestjs/jwt";
+import type { SessionTokenPayload, AuthToken } from "../../shared/types";
+import { LoginDto } from "./dto/login.dto";
+import { Status } from "../../shared/types";
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
     @InjectModel(SessionData.name)
     private session: Model<SessionDataDocument>,
     private userService: UserService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   /**
@@ -42,19 +42,19 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<AuthToken> {
     const isUser = (await this.validateUser(
       loginDto.email,
-      loginDto.password,
+      loginDto.password
     )) as WarpedUser;
     console.log(
-      '🚀 ~ file: auth.service.ts:37 ~ AuthService ~ login ~ isUser:',
-      isUser,
+      "🚀 ~ file: auth.service.ts:37 ~ AuthService ~ login ~ isUser:",
+      isUser
     );
     if (!isUser) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
     // generate JWT
     const refreshToken = this.jwtService.sign(
       { email: isUser.email },
-      { expiresIn: '30d' },
+      { expiresIn: "30d" }
     );
     const session = new this.session({
       user: isUser,
@@ -79,13 +79,13 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<AuthToken> {
     const session = await this.session
       .findOne({ refreshToken, status: Status.ACTIVE })
-      .populate('user')
+      .populate("user")
       .exec();
     if (!session) {
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new UnauthorizedException("Invalid refresh token");
     }
-    if (session.user.status !== 'ACTIVE') {
-      throw new UnauthorizedException('User is not active');
+    if (session.user.status !== "ACTIVE") {
+      throw new UnauthorizedException("User is not active");
     }
 
     const payload: SessionTokenPayload = {
@@ -96,7 +96,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     const newRefreshToken = this.jwtService.sign(
       { email: session.user.email },
-      { expiresIn: '30d' },
+      { expiresIn: "30d" }
     );
     session.refreshToken = newRefreshToken;
     await session.save();
@@ -117,9 +117,9 @@ export class AuthService {
       .findOne({ _id: sessionId, status: Status.ACTIVE })
       .exec();
     if (!session) {
-      throw new NotFoundException('Session not found');
+      throw new NotFoundException("Session not found");
     }
-    session.status = 'INACTIVE';
+    session.status = "INACTIVE";
     await session.save();
   }
 
@@ -131,10 +131,10 @@ export class AuthService {
   async getSession(sessionId: string): Promise<SessionData> {
     const session = await this.session
       .findOne({ _id: sessionId, status: Status.ACTIVE })
-      .populate('user')
+      .populate("user")
       .exec();
     if (!session) {
-      throw new ForbiddenException('Session not found');
+      throw new ForbiddenException("Session not found");
     }
     return session;
   }

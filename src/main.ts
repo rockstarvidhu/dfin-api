@@ -1,11 +1,11 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "src/app/app.module";
+import { AppModule } from "./app/app.module";
 import * as compression from "compression";
 import helmet from "helmet";
 import { SecuritySchemeObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { APP, SWAGGER_STATS } from "src/config";
+import { APP, SWAGGER_STATS } from "./config";
 import * as swaggerStats from "swagger-stats";
 async function boostrap() {
   const logger = new Logger("Learn Nest");
@@ -14,8 +14,8 @@ async function boostrap() {
     bufferLogs: true,
   });
 
-  //   app.use(compression);
-  //   app.use(helmet);
+  app.use(compression);
+  app.use(helmet);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const schema: SecuritySchemeObject = {
@@ -26,7 +26,7 @@ async function boostrap() {
   };
 
   const config = new DocumentBuilder()
-    .setTitle("boook trips api")
+    .setTitle("gold api")
     .setDescription("main api")
     .setVersion("1.0")
     .addBearerAuth(schema)
@@ -51,7 +51,7 @@ async function boostrap() {
       swaggerSpec: document,
       sessionMaxAge: 86400,
       swaggerOnly: true,
-      onAuthenticate(req, username, password) {
+      onAuthenticate(req, username: string, password: string) {
         return (
           username === SWAGGER_STATS.USERNAME &&
           password === SWAGGER_STATS.PASSWORD

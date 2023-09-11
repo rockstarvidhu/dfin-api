@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-import { Role, RoleType, Status, StatusType } from "src/shared/types";
+import { Role, RoleType, Status, StatusType } from "../../../shared/types";
 
 export type UserDocument = HydratedDocument<User>;
 export type WarpedUser = Omit<User, "passwordHash">;
@@ -13,7 +13,7 @@ export type ReqUser = Omit<
 };
 export type NewUser = { password: string } & Omit<
   User,
-  "passwordHash" | "settings" | "pricePercentage"
+  "passwordHash" | "settings" | "pricePercentage" | "status"
 >;
 
 @Schema({
@@ -21,33 +21,33 @@ export type NewUser = { password: string } & Omit<
 })
 export class User {
   @Prop({ required: true })
-  name: string;
+  name!: string;
 
   @Prop({ required: true, unique: true, index: true })
-  email: string;
+  email!: string;
 
   @Prop({ required: true })
-  passwordHash: string;
+  passwordHash!: string;
 
   @Prop({
     type: String,
     enum: Status,
-    default: Status.ACTIVE,
+    default: Status.INACTIVE,
   })
-  status: StatusType;
+  status!: StatusType;
 
   @Prop({
     type: String,
     enum: Role,
     default: Role.USER_ADMIN,
   })
-  role: RoleType;
+  role!: RoleType;
 
   @Prop({ type: Object, default: {}, required: false })
-  settings: Record<string, any>;
+  settings!: Record<string, any>;
 
   @Prop({ required: false })
-  pricePercentage: number;
+  pricePercentage!: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as SchemaType } from "mongoose";
-import { User } from "src/app/user/entities/user.entity";
+import { User } from "../../user/entities/user.entity";
 
 export type RateAdjustmentsDocument = HydratedDocument<RateAdjustments>;
 
@@ -14,10 +14,10 @@ export class RateAdjustments {
     required: true,
     unique: true,
   })
-  user: User;
+  user!: User;
 
   @Prop({ required: true })
-  percentageChange: number;
+  percentageChange!: number;
 }
 
 export const RateAdjustmentsSchema =

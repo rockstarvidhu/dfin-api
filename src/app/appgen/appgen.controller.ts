@@ -4,10 +4,10 @@ import { ApiTags } from "@nestjs/swagger";
 import { ReqUser } from "../user/entities/user.entity";
 import { BuildAppDto } from "./dto/appgen.dto.";
 import { AppGenService } from "./appgen.service";
-import { User } from "src/shared/decorators";
+import { User } from "../../shared/decorators";
 
-@ApiTags("AppGen")
-@Controller("appgen")
+@ApiTags("AppBuild")
+@Controller("app-build")
 export class AppGenController {
   constructor(private readonly appGenService: AppGenService) {}
 

@@ -8,7 +8,7 @@ import { APP, DB } from "../config";
 import { HttpLoggerMiddleware } from "@nest-toolbox/http-logger-middleware";
 import { AuthModule } from "./auth/auth.module";
 import { AppGenModule } from "./appgen/appgen.module";
-import { GoldListingModule } from "./gold-lisitng/gold-listing.module";
+
 import { MetalRatesModule } from "./rates/rates.module";
 @Module({
   imports: [
@@ -21,7 +21,6 @@ import { MetalRatesModule } from "./rates/rates.module";
     UserModule,
     MetalRatesModule,
     AppGenModule,
-    GoldListingModule,
   ],
 
   providers: [
