@@ -2,8 +2,8 @@
 # BASE IMAGE
 ###################
 
-FROM node:16 AS base
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+FROM node:22 AS base
+RUN npm install -g pnpm
 WORKDIR /usr/src/app
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
@@ -13,7 +13,7 @@ COPY pnpm-lock.yaml ./
 ###################
 
 FROM base AS development
-RUN  pnpm install --frozen-lockfile
+RUN  pnpm install --force
 COPY . .
 USER node
 
