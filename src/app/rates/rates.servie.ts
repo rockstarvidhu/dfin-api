@@ -23,7 +23,7 @@ export class MetalRateService {
   ) {}
 
   /**
-   *  create user
+   * create user
    * @param user
    * @returns  Promise<Post>
    */
@@ -56,11 +56,13 @@ export class MetalRateService {
       const updatedLiveGoldRate = {
         buy: parseFloat((rateDataUSD.bid * (1 + percentageChange)).toFixed(2)),
         sell: parseFloat((rateDataUSD.ask * (1 - percentageChange)).toFixed(2)),
+        
+        // FIXED: Using high_ask and low_bid from the payload
         high_price: parseFloat(
-          (rateDataUSD.high_price * (1 - percentageChange)).toFixed(2)
+          (rateDataUSD.high_ask * (1 - percentageChange)).toFixed(2)
         ),
         low_price: parseFloat(
-          (rateDataUSD.low_price * (1 - percentageChange)).toFixed(2)
+          (rateDataUSD.low_bid * (1 - percentageChange)).toFixed(2)
         ),
       };
 
@@ -118,7 +120,7 @@ export class MetalRateService {
   }
 
   /**
-   *  get live rate
+   * get live rate
    */
 
   async getRates(userId: string): Promise<Object> {
